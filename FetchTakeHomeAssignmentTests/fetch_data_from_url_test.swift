@@ -8,6 +8,7 @@
 import XCTest
 @testable import FetchTakeHomeAssignment
 
+//----------- TEST CASE TO CHECK THE FETCHDATA FUNCTION TO FETCH THE JSON ------------
 final class FetchTakeHomeAssignmentTests: XCTestCase {
 
     var fetchDataFromTheUrl: FetchDataFromTheUrl!
@@ -24,7 +25,7 @@ final class FetchTakeHomeAssignmentTests: XCTestCase {
          //expectation for when the data is fetched
          let expectation = XCTestExpectation(description: "Data fetched successfully")
 
-         await fetchDataFromTheUrl.fetchData()
+         await fetchDataFromTheUrl.fetchData() 
          
          //If recipeItems is not [], expectation is fulfilled
          if !fetchDataFromTheUrl.recipeItems.isEmpty {

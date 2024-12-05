@@ -22,8 +22,8 @@ class CacheImages{
         cacheDirectory = cachesPath.appendingPathComponent("ImageCache") //Appending ImageCache to the directory path
         
         // Creating the directory if it doesn't exist
-        if !fileManager.fileExists(atPath: cacheDirectory.path) { //If the ImageCache directory does not exist
-            try? fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true) //create the directory 
+        if !fileManager.fileExists(atPath: cacheDirectory.path) { //Check If the ImageCache directory does not exist
+            try? fileManager.createDirectory(at: cacheDirectory, withIntermediateDirectories: true) //create the directory
         }
     }
     
@@ -32,7 +32,7 @@ class CacheImages{
           return cacheDirectory.appendingPathComponent(key)
       }
     
-    // Function to save image to cache (disk)
+    // Function to save image to disk
     func saveImageToCache(from urlString: String, forKey key: String) {
         guard let url = URL(string: urlString) else { return }  // Converting the string to a URL
         
@@ -41,7 +41,7 @@ class CacheImages{
             let data = try Data(contentsOf: url) // Fetch image data from the URL
             
             // Convert data to UIImage
-            guard let image = UIImage(data: data) else { return }  // Convert data to UIImage
+            guard let image = UIImage(data: data) else { return }
             
             // Convert UIImage to PNG data
             guard let imageData = image.pngData() else { return }
@@ -63,7 +63,7 @@ class CacheImages{
             return image
         }
         
-        return nil  // Return nil if the image doesn't exist in cache
+        return nil  // Returning nil if the image doesn't exist in cache
     }
     
     

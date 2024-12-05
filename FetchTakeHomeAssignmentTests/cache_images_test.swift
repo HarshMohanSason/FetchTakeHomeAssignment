@@ -2,7 +2,7 @@ import XCTest
 @testable import FetchTakeHomeAssignment
 
 
-//TEST CASE FOR TESTING CACHING
+//----------- TEST CASE TO TEST THE CACHING ------------
 final class FetchTakeHomeAssignment: XCTestCase {
     
     var cacheImages: CacheImages!
