@@ -48,31 +48,42 @@ struct ContentView: View {
 }
 
 struct DisplayMenuItem: View {
-    var recipeItem: RecipeItem  // Pass the RecipeItem to this view
-    @State private var showError = false  // To track if an error should be shown for the image being displayed
+    
+    let recipeItem: RecipeItem // Pass the RecipeItem to this view
+    @State private var showError = false // To track if an error should be shown for the image being displayed
     private let fetchCacheImage = CacheImages()
+
     var body: some View {
-        VStack{
+        VStack(spacing: 15) {
             // Display the photo from the cache if it is not empty
-            if let image =  fetchCacheImage.loadImageFromCache(forKey: recipeItem.uuid){
-                Image(uiImage: image) // Convert UIImage to SwiftUI Image
+            if let image = fetchCacheImage.loadImageFromCache(forKey: recipeItem.uuid) {
+                Image(uiImage: image)
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
                     .frame(width: 200, height: 150)
+                    .clipped()
+                    .cornerRadius(10)
             }
             //if no image is fetched from cache, then fetch from the url
             else if let photoUrl = recipeItem.photo_url_large, let url = URL(string: photoUrl) {
                 AsyncImage(url: url) { image in
                     image.resizable()
-                        .scaledToFit()
+                        .scaledToFill()
                         .frame(width: 200, height: 150)
+                        .clipped()
+                        .cornerRadius(10)
                 } placeholder: {
                     if showError {
                         Text("Failed to load image")
                             .foregroundColor(.red)
+                            .frame(width: 200, height: 150)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(10)
                     } else {
                         ProgressView()
                             .frame(width: 200, height: 150)
+                            .background(Color.gray.opacity(0.2))
+                            .cornerRadius(10)
                             .onAppear {
                                 // Starting a timer when placeholder appears to show the text error to the user if image is failed to load
                                 Timer.scheduledTimer(withTimeInterval: 10, repeats: false) { _ in
@@ -81,61 +92,75 @@ struct DisplayMenuItem: View {
                             }
                     }
                 }
-            }
-            //Display a gray frame if no image is fetched from the url
+            }  //Display a gray frame if no image is fetched from the url
             else {
-                Color.gray.frame(width: 150, height: 150)  // Default square if no image
+                Color.gray.opacity(0.2)
+                    .frame(width: 200, height: 150)
+                    .cornerRadius(10)
             }
             
             //Display the item name
             Text(recipeItem.name)
                 .font(.headline)
+                .foregroundColor(.primary)
                 .lineLimit(1)
-                .padding([.top], 5)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 10)
             
             //Display the cuisine name
             Text(recipeItem.cuisine)
                 .font(.subheadline)
-                .foregroundColor(.gray)
+                .foregroundColor(.secondary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 10)
             
             // Display the source_url
             if let sourceUrl = recipeItem.source_url, let url = URL(string: sourceUrl) {
                 Link("View Recipe", destination: url)
                     .font(.footnote)
                     .foregroundColor(.blue)
-                    .padding(.top, 5)
+                    .buttonStyle(PlainButtonStyle())
+                    .padding(.horizontal, 10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             //Error text for the if no link is present for the recipe
-            else{
-                Text("No link for the recipe").font(.footnote)
+            else {
+                Text("No link for the recipe")
+                    .font(.footnote)
                     .foregroundColor(.red)
-                    .padding(.top, 5)
+                    .padding(.horizontal, 10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
-            
-            // display the youtube_url
+            // Display the youtube_url
             if let youtubeUrl = recipeItem.youtube_url, let url = URL(string: youtubeUrl) {
                 Link("Watch on YouTube", destination: url)
                     .font(.footnote)
                     .foregroundColor(.blue)
-                    .padding(.top, 5)
+                    .padding(.horizontal, 10)
+                    .buttonStyle(PlainButtonStyle())
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
             //Error text if no link is present for the youtube url
-            else
-            {
-                Text("No link for the recipe").font(.footnote)
+            else {
+                Text("No YouTube link available")
+                    .font(.footnote)
                     .foregroundColor(.red)
-                    .padding(.top, 5)
+                    .padding(.horizontal, 10)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: 400)  // Size of each menu item
-        .padding(5)
-        .background(Color.clear)
-        .cornerRadius(20)
-        .shadow(radius: 5)
-        
+        .padding()
+        .background(
+            LinearGradient(
+                gradient: Gradient(colors: [Color.white, Color.gray.opacity(0.1)]),
+                startPoint: .top,
+                endPoint: .bottom
+            )
+        )
+        .cornerRadius(15)
+        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 5)
     }
 }
-
 #Preview {
     ContentView()
 }
